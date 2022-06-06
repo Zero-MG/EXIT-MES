@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="erp.exit.mapper.InformationMapper">
+
+	<select id="list" resultType="erp.exit.domain.ProductVO">
+	<![CDATA[
+		SELECT rownum "rn", idx, code, codeName, buyer, buyerName, purchasing, purchasingName
+		, buyCompany, buyCompanyName, inspectperson, currentInventory, price, inspect, disuse
+        FROM 
+        (SELECT idx, code, codeName, buyer, buyerName, purchasing, purchasingName
+		, buyCompany, buyCompanyName, inspectperson, currentInventory, price, inspect, disuse
+        FROM exit_product ORDER BY idx DESC)
+		]]>
+	</select>
+
+	<insert id="register">
+	<![CDATA[
+		INSERT INTO exit_product(idx, code, codeName, buyer, buyerName, purchasing, purchasingName
+		, buyCompany, buyCompanyName, inspectperson, currentInventory, price, inspect, disuse)
+		VALUES (PRODUCT_IDX_SEQ.nextval,#{code},#{codeName},#{buyer},#{buyerName},#{purchasing},#{purchasingName}
+		,#{buyCompany},#{buyCompanyName},#{inspectperson},#{currentInventory},#{price}
+		,#{inspect},#{disuse})
+	]]>
+	</insert>
+	
+	<!-- 삭제품목 조회 기능 -->
+	<select id="codeSearch" resultType="erp.exit.domain.ProductVO">
+	<![CDATA[
+		SELECT * FROM exit_product WHERE code = #{code}
+      ]]>
+	</select>
+	
+	<select id="codeSearch2" resultType="erp.exit.domain.ProductVO">
+	<![CDATA[
+		SELECT * FROM exit_product WHERE code = #{code}
+      ]]>
+	</select>
+	<!-- 삭제품목 조회 기능 -->
+	
+	<!-- 삭제 & 백업 기능 -->
+	<update id="delUpdateDD">
+		UPDATE exit_product SET DISUSE = 'Y' WHERE code = #{code}
+	</update>
+	<insert id="delBackUpData">
+		INSERT INTO exit_product_del_save SELECT * FROM exit_product WHERE code = #{code}
+	</insert>
+	<delete id="delComplete">
+		DELETE FROM exit_product WHERE code = #{code}
+	</delete>
+	<!-- 삭제 & 백업 기능 끝 -->
+	
+	<update id="modify">
+		UPDATE exit_product SET codeName = #{codeName}, buyer = #{buyer}, buyerName = #{buyerName}
+		, purchasing = #{purchasing}, purchasingName = #{purchasingName}
+		, buyCompany = #{buyCompany}, buyCompanyName = #{buyCompanyName}, inspectperson = #{inspectperson}
+		, currentInventory = #{currentInventory}, price = #{price},
+		inspect = #{inspect}, disuse = #{disuse}
+		WHERE code = #{code}
+	</update>
+	
+	<select id="selectSearchList" resultType="erp.exit.domain.ProductDTO">
+		<![CDATA[
+			SELECT rownum "rn", idx, code, codeName, buyer, buyerName, purchasing, purchasingName
+			, buyCompany, buyCompanyName, inspectperson, currentInventory, price,
+			inspect, disuse FROM exit_product 
+			WHERE ${type} LIKE '%'||#{keyword}||'%' ORDER BY idx DESC
+		]]>
+	</select>
+	
+	<select id="regcheck" resultType="int">
+		SELECT COUNT(*) FROM exit_product WHERE code = #{code}
+	</select>
+	
+</mapper>
