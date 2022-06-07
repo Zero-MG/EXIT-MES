@@ -153,4 +153,4 @@ public class InformationController {
 
 //리다이렉트 메모
 //return "redirect:/material/list";
-
+//Re Commit Test
