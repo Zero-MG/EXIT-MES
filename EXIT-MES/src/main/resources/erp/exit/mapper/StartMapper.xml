@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="erp.exit.mapper.StartMapper">
+
+	<!--회원가입 -->
+	<insert id="create">
+	<![CDATA[
+		INSERT INTO EXIT_MEMBER(userId, userPass, userDepart, userName, userEmail) 
+			VALUES(#{userId}, #{userPass}, #{userDepart}, #{userName}, #{userEmail})
+	]]>
+	</insert>
+	
+	<!-- 로그인 -->
+	<select id="login" resultType="int">
+	<![CDATA[
+		select count(*) from exit_member where userId=#{userId} and userPass=#{userPass}	
+	]]>
+	</select>
+	
+	<select id="sessionData" resultType="erp.exit.domain.MemberDTO">
+		SELECT userid, username, useremail, regdate FROM exit_member WHERE userid = #{userId}
+	</select>
+	
+	<select id="idCheck" resultType="int">
+		SELECT COUNT(*) FROM exit_member WHERE userid = #{userId}
+	</select>
+
+	<select id="checkpwd" resultType="string">
+		select userPass from exit_member where userId=#{userId}
+	</select>
+	
+</mapper>
